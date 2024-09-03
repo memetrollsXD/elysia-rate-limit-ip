@@ -1,24 +1,24 @@
-import { headersToCheck } from "../constants";
-import { IPHeaders } from "../types";
-import { debug } from "./debug";
+import { headersToCheck } from "../constants/ip";
+import { IPHeaders } from "../@types/IP";
+import { logger } from "./logger";
 
 export const getIP = (
   headers: Headers,
   checkHeaders: IPHeaders[] = headersToCheck,
 ) => {
   if (typeof checkHeaders === "string" && headers.get(checkHeaders)) {
-    debug(`getIP: Found ip from header ${checkHeaders}`);
+    logger("elysia-ip", `getIP: Found ip from header ${checkHeaders}`);
     return headers.get(checkHeaders);
   }
 
   // X-Forwarded-For is the de-facto standard header
   if (!checkHeaders && headers.get("x-forwarded-for")) {
-    debug("getIP: IP From Header x-forwarded-for");
+    logger("elysia-ip", "getIP: IP From Header x-forwarded-for");
     return headers.get("x-forwarded-for")?.split(",")[0];
   }
 
   if (!checkHeaders) {
-    debug("getIP: No checkHeaders");
+    logger("elysia-ip", "getIP: No checkHeaders");
     return null;
   }
 
@@ -26,13 +26,13 @@ export const getIP = (
   for (const header of checkHeaders) {
     clientIP = headers.get(header);
     if (clientIP) {
-      debug(`getIP: Found ip from header ${header}`);
+      logger("elysia-ip", `getIP: Found ip from header ${header}`);
       break;
     }
   }
 
   if (!clientIP) {
-    debug("getIP: Failed to get ip from header!");
+    logger("elysia-ip", "getIP: Failed to get ip from header!");
     return;
   }
   return clientIP;
