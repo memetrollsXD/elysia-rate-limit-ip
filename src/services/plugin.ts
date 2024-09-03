@@ -24,6 +24,38 @@ export const plugin = (userOptions?: Partial<Options>) => {
       name: "elysia-rate-limit"
     })
 
+    plugin.derive({ as: "global" }, ({ request }): { ip: string } => {
+      serverIP: {
+        if (!options.headersOnly && globalThis.Bun) {
+          const server = options.injectServer(app);
+          if (!server) {
+            debug(
+              "plugin: Elysia server is not initialized. Make sure to call Elyisa.listen()",
+            );
+            debug("plugin: use injectServer to inject Server instance");
+            break serverIP;
+          }
+
+          if (!server.requestIP) {
+            debug("plugin: server.requestIP is null");
+            debug("plugin: Please check server instace");
+            break serverIP;
+          }
+
+          const socketAddress = server.requestIP(request);
+          debug(`plugin: socketAddress ${JSON.stringify(socketAddress)}`);
+          if (!socketAddress) {
+            debug("plugin: ip from server.requestIP return `null`");
+            break serverIP;
+          }
+          return { ip: socketAddress.address };
+        }
+      }
+      return {
+        ip: getIP(request.headers, true) || "",
+      };
+    });
+
     // @ts-expect-error somehow qi is being sent from elysia, but there's no type declaration for it
     plugin.onBeforeHandle({ as: options.scoping }, async ({ set, request, query, path, store, cookie, error, body, params, headers, qi, ...rest }) => {
       let clientKey: string | undefined
@@ -102,6 +134,7 @@ export const plugin = (userOptions?: Partial<Options>) => {
           for (const [key, value] of Object.entries(builtHeaders))
             set.headers[key] = value
 
+        rest.ip = clientKey;
         logger('plugin', 'clientKey %s passed through with %d/%d request used (resetting in %d seconds)', clientKey, options.max - payload.remaining, options.max, reset)
       }
     })
