@@ -1,11 +1,11 @@
-import { headersToCheck } from "../constants/ip";
+import { headersToCheck } from "../constants/defaultOptions";
 import { IPHeaders } from "../@types/IP";
 import { logger } from "./logger";
 
 export const getIP = (
   headers: Headers,
   checkHeaders: IPHeaders[] = headersToCheck,
-) => {
+): string | null => {
   if (typeof checkHeaders === "string" && headers.get(checkHeaders)) {
     logger("elysia-ip", `getIP: Found ip from header ${checkHeaders}`);
     return headers.get(checkHeaders);
@@ -14,7 +14,7 @@ export const getIP = (
   // X-Forwarded-For is the de-facto standard header
   if (!checkHeaders && headers.get("x-forwarded-for")) {
     logger("elysia-ip", "getIP: IP From Header x-forwarded-for");
-    return headers.get("x-forwarded-for")?.split(",")[0];
+    return headers.get("x-forwarded-for")?.split(",")[0] ?? null;
   }
 
   if (!checkHeaders) {
@@ -33,7 +33,7 @@ export const getIP = (
 
   if (!clientIP) {
     logger("elysia-ip", "getIP: Failed to get ip from header!");
-    return;
+    return null;
   }
   return clientIP;
 };

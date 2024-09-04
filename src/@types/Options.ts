@@ -2,6 +2,7 @@ import type { Server } from 'bun'
 
 import type { Context } from './Context'
 import type { Generator } from './Generator'
+import Elysia from 'elysia'
 
 export interface Options {
   // The duration for plugin to remember the requests (Default: 60000ms)
@@ -35,9 +36,12 @@ export interface Options {
   // uses this as last resort only
   // since this function will slightly reduce server performance
   // (Default: not defined)
-  injectServer?: () => Server | null
+  injectServer?: (app: Elysia) => Server | null
 
   // let the plugin in control of RateLimit-* headers
   // (Default: true)
-  headers: boolean
+  headers: boolean,
+
+  headersOnly: boolean, // elysia-ip: Only check for headers
+  checkHeaders: string[], // elysia-ip: Headers to check for IP address
 }

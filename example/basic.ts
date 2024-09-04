@@ -6,7 +6,7 @@ import { rateLimit } from '../src'
 const app = new Elysia()
   .use(swagger())
   .use(rateLimit())
-  .get('/', () => 'hello')
+  .get('/', (ctx) => `hello, ${ctx.ip} (${typeof ctx.ip})!`)
   .listen(3000, () => {
     console.log('🦊 Swagger is active at: http://localhost:3000/swagger')
   })

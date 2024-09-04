@@ -20,7 +20,7 @@
   },
   "types": "./dist/index.d.ts",
   "scripts": {
-    "dev": "DEBUG=* bun run --hot example/basic.ts",
+    "dev": "DEBUG=* NODE_DEBUG=elysia-ip bun run --hot example/basic.ts",
     "dev:multi": "DEBUG=* bun run --hot example/multiInstance.ts",
     "dev:inject": "DEBUG=* bun run --hot example/multiInstanceInjected.ts",
     "build": "rm -rf dist && tsc --project tsconfig.esm.json"
