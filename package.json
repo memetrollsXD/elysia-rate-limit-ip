@@ -1,15 +1,24 @@
 {
-  "name": "elysia-rate-limit",
-  "version": "4.1.0",
-  "description": "Rate-limiter for Elysia.js",
+  "name": "elysia-rate-limit-ip",
+  "version": "1.0.0",
+  "description": "Rate-limiter + IP for Elysia.js",
   "author": {
+    "name": "memetrollsXD",
+    "url": "https://github.com/memetrollsxd",
+    "email": "paris@memetrolls.net"
+  },
+  "contributors": [{
     "name": "rayriffy",
     "url": "https://github.com/rayriffy",
     "email": "mail@rayriffy.com"
-  },
+  }, {
+    "name": "Gaurish Sethia",
+    "url": "https://github.com/gaurishhs",
+    "email": "gaurishh.sethia@gmail.com"
+  }]
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rayriffy/elysia-rate-limit.git"
+    "url": "git+https://github.com/memetrollsxd/elysia-rate-limit-ip.git"
   },
   "main": "./dist/index.js",
   "exports": {
